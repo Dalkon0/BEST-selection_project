@@ -16,8 +16,8 @@ from i18n import t
 st.set_page_config(page_title='UAV Telemetry Analyzer', page_icon='🛸', layout='wide')
 
 st.sidebar.markdown("""
-<div style="text-align: center; padding: 10px 0 20px;">
-    <h2 style="color: #58a6ff; margin-bottom: 0; font-size: 20px;">🛸 UAV ANALYZER</h2>
+<div style="text-align: center; padding: 0 0 15px 0; margin-top: -10px;">
+    <h2 style="color: #58a6ff; margin-bottom: 0; font-size: 20px;">UAV ANALYZER</h2>
     <p style="color: #8b949e; font-size: 10px; text-transform: uppercase; letter-spacing: 2px;">Professional Suite</p>
     <div style="height: 1px; background: linear-gradient(90deg, transparent, #21262d, transparent); margin-top: 10px;"></div>
 </div>
