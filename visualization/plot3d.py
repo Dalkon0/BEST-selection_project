@@ -64,10 +64,17 @@ def build_3d_track(gps_enu_df, color_by='speed', show_anomalies=True):
     fig.update_layout(
         template='plotly_dark', 
         title='3D-траєкторія БПЛА', 
-        scene=dict(xaxis_title='E (m)', yaxis_title='N (m)', zaxis_title='U (m)', aspectmode='data'), 
-        margin=dict(l=0, r=0, b=0, t=40), 
+        scene=dict(
+            xaxis_title='E (m)', yaxis_title='N (m)', zaxis_title='U (m)', 
+            aspectmode='data',
+            camera=dict(
+                eye=dict(x=1.5, y=-1.5, z=1.2),
+                center=dict(x=0, y=0, z=-0.1)
+            )
+        ), 
+        margin=dict(l=10, r=10, b=10, t=50), 
         height=700,
-        legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01)
+        legend=dict(yanchor="top", y=0.95, xanchor="left", x=0.05)
     )
     return fig
 
@@ -90,10 +97,17 @@ def build_3d_track_animation(gps_enu_df):
         ],
         layout=go.Layout(
             template='plotly_dark',
-            scene=dict(xaxis_title='E (m)', yaxis_title='N (m)', zaxis_title='U (m)', aspectmode='data'),
+            scene=dict(
+                xaxis_title='E (m)', yaxis_title='N (m)', zaxis_title='U (m)', 
+                aspectmode='data',
+                camera=dict(
+                    eye=dict(x=1.5, y=-1.5, z=1.2),
+                    center=dict(x=0, y=0, z=-0.1)
+                )
+            ),
             updatemenus=[dict(type="buttons", buttons=[dict(label="Play Replay", method="animate", 
                          args=[None, {"frame": {"duration": 40, "redraw": True}, "fromcurrent": True}])])],
-            margin=dict(l=0, r=0, b=0, t=40),
+            margin=dict(l=10, r=10, b=10, t=50),
             height=700, title='Replay польоту'
         ),
         frames=[go.Frame(data=[
@@ -119,8 +133,14 @@ def build_comparison_3d(enu_a, enu_b, name_a="Log A", name_b="Log B"):
     
     fig.update_layout(
         template='plotly_dark', title='Порівняння траєкторій',
-        scene=dict(xaxis_title='E (m)', yaxis_title='N (m)', zaxis_title='U (m)', aspectmode='data'),
-        margin=dict(l=0, r=0, b=0, t=40), height=700
+        scene=dict(
+            xaxis_title='E (m)', yaxis_title='N (m)', zaxis_title='U (m)', 
+            aspectmode='data',
+            camera=dict(
+                eye=dict(x=1.8, y=-1.8, z=1.5)
+            )
+        ),
+        margin=dict(l=10, r=10, b=10, t=50), height=700
     )
     return fig
 
