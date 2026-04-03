@@ -73,23 +73,33 @@ def build_3d_track(gps_enu_df, color_by='speed', show_anomalies=True):
 
 def build_3d_track_animation(gps_enu_df):
     from analytics.metrics import downsample_df
-    # For animation, we need fewer points for smoothness
-    df = downsample_df(gps_enu_df, 200).copy()
+    df = downsample_df(gps_enu_df, 300).copy()
     
     fig = go.Figure(
         data=[
-            go.Scatter3d(x=df['E_m'], y=df['N_m'], z=df['U_m'], mode='lines', line=dict(color='gray', width=2), name='Шлях'),
+            # Static path
+            go.Scatter3d(x=df['E_m'], y=df['N_m'], z=df['U_m'], mode='lines', 
+                        line=dict(color='rgba(100,100,100,0.3)', width=2), name='Шлях'),
+            # Animated drone
             go.Scatter3d(x=[df['E_m'].iloc[0]], y=[df['N_m'].iloc[0]], z=[df['U_m'].iloc[0]], 
-                        mode='markers', marker=dict(size=10, color='yellow', symbol='circle'), name='БПЛА')
+                        mode='markers+text', marker=dict(size=8, color='yellow', symbol='circle'), 
+                        text=["БПЛА"], textposition="top center", name='БПЛА'),
+            # Animated shadow
+            go.Scatter3d(x=[df['E_m'].iloc[0]], y=[df['N_m'].iloc[0]], z=[0], 
+                        mode='markers', marker=dict(size=4, color='white', opacity=0.5), name='Проекція')
         ],
         layout=go.Layout(
             template='plotly_dark',
             scene=dict(xaxis_title='E (m)', yaxis_title='N (m)', zaxis_title='U (m)', aspectmode='data'),
-            updatemenus=[dict(type="buttons", buttons=[dict(label="Play", method="animate", args=[None, {"frame": {"duration": 50, "redraw": True}, "fromcurrent": True}])])],
+            updatemenus=[dict(type="buttons", buttons=[dict(label="Play Replay", method="animate", 
+                         args=[None, {"frame": {"duration": 40, "redraw": True}, "fromcurrent": True}])])],
             margin=dict(l=0, r=0, b=0, t=40),
-            height=700
-        , title='Анімація польоту (Replay)'),
-        frames=[go.Frame(data=[go.Scatter3d(x=[df['E_m'].iloc[i]], y=[df['N_m'].iloc[i]], z=[df['U_m'].iloc[i]])], traces=[1]) for i in range(len(df))]
+            height=700, title='Replay польоту'
+        ),
+        frames=[go.Frame(data=[
+            go.Scatter3d(x=[df['E_m'].iloc[i]], y=[df['N_m'].iloc[i]], z=[df['U_m'].iloc[i]]),
+            go.Scatter3d(x=[df['E_m'].iloc[i]], y=[df['N_m'].iloc[i]], z=[0])
+        ], traces=[1, 2]) for i in range(len(df))]
     )
     return fig
 

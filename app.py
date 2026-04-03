@@ -17,38 +17,38 @@ st.set_page_config(page_title='UAV Telemetry Analyzer', page_icon='🛸', layout
 
 lang = st.sidebar.selectbox('Language / Мова', ['en', 'uk'], index=1, label_visibility='collapsed')
 
-st.markdown("""
+st.markdown(f"""
 <style>
-    .stApp { background-color: #0f1117; color: #e0e0e0; }
-    section[data-testid="stSidebar"] { background-color: #161b22; border-right: 1px solid #21262d; }
-    [data-testid="stSidebarContent"] { padding-top: 0rem !important; }
-    [data-testid="stSidebarNav"] { display: none; }
-    [data-testid="stMetric"] {
+    .stApp {{ background-color: #0f1117; color: #e0e0e0; }}
+    section[data-testid="stSidebar"] {{ background-color: #161b22; border-right: 1px solid #21262d; }}
+    [data-testid="stSidebarContent"] {{ padding-top: 0rem !important; }}
+    [data-testid="stSidebarNav"] {{ display: none; }}
+    [data-testid="stMetric"] {{
         background-color: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 12px 16px;
-    }
-    [data-testid="stMetricValue"] { color: #58a6ff; font-weight: 700; font-size: 24px; }
-    [data-testid="stMetricLabel"] { color: #8b949e; font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
-    .section-label { color: #8b949e; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; margin-top: 24px; }
-    .status-badge { display: flex; align-items:center; gap: 6px; background: rgba(35, 134, 54, 0.15); color: #3fb950; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(63, 185, 80, 0.3); }
-    .status-dot { width: 6px; height: 6px; background: #3fb950; border-radius: 50%; box-shadow: 0 0 8px #3fb950; }
-    .stTabs [data-baseweb="tab-list"] { gap: 8px; background-color: transparent; }
-    .stTabs [data-baseweb="tab"] {
+    }}
+    [data-testid="stMetricValue"] {{ color: #58a6ff; font-weight: 700; font-size: 24px; }}
+    [data-testid="stMetricLabel"] {{ color: #8b949e; font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }}
+    .section-label {{ color: #8b949e; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; margin-top: 24px; }}
+    .status-badge {{ display: flex; align-items:center; gap: 6px; background: rgba(35, 134, 54, 0.15); color: #3fb950; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(63, 185, 80, 0.3); }}
+    .status-dot {{ width: 6px; height: 6px; background: #3fb950; border-radius: 50%; box-shadow: 0 0 8px #3fb950; }}
+    .stTabs [data-baseweb="tab-list"] {{ gap: 8px; background-color: transparent; }}
+    .stTabs [data-baseweb="tab"] {{
         height: 40px; background-color: #161b22; border-radius: 6px 6px 0 0; border: 1px solid #30363d; border-bottom: none; color: #8b949e; padding: 0 20px;
-    }
-    .stTabs [aria-selected="true"] { background-color: #1f2937 !important; color: #58a6ff !important; border-top: 2px solid #58a6ff !important; }
-    .model-badge { background: #21262d; color: #58a6ff; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; border: 1px solid #30363d; margin-right: 6px; }
-    .token-info { font-family: monospace; font-size: 10px; color: #8b949e; }
-    .ai-card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
-    .ai-card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #30363d; padding-bottom: 12px; margin-bottom: 16px; }
-    .token-bar { display: flex; gap: 16px; background: #0d1117; padding: 10px 16px; border-radius: 6px; border: 1px solid #21262d; margin-top: 24px; }
-    .token-stat { font-size: 11px; color: #8b949e; }
-    .token-stat span { color: #c9d1d9; font-weight: 600; margin-left: 4px; }
-    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 40px; }
-    .feature-card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; transition: transform 0.2s, border-color 0.2s; }
-    .feature-card:hover { border-color: #58a6ff; transform: translateY(-2px); }
-    .feature-card-title { color: #e6edf3; font-weight: 600; margin-bottom: 8px; }
-    .feature-card-desc { color: #8b949e; font-size: 13px; line-height: 1.5; }
-    div[data-testid="stExpander"] { background: #161b22; border: 1px solid #30363d; border-radius: 6px; }
+    }}
+    .stTabs [aria-selected="true"] {{ background-color: #1f2937 !important; color: #58a6ff !important; border-top: 2px solid #58a6ff !important; }}
+    .model-badge {{ background: #21262d; color: #58a6ff; font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; border: 1px solid #30363d; margin-right: 6px; }}
+    .token-info {{ font-family: monospace; font-size: 10px; color: #8b949e; }}
+    .ai-card {{ background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; margin-bottom: 16px; }}
+    .ai-card-header {{ display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #30363d; padding-bottom: 12px; margin-bottom: 16px; }}
+    .token-bar {{ display: flex; gap: 16px; background: #0d1117; padding: 10px 16px; border-radius: 6px; border: 1px solid #21262d; margin-top: 24px; }}
+    .token-stat {{ font-size: 11px; color: #8b949e; }}
+    .token-stat span {{ color: #c9d1d9; font-weight: 600; margin-left: 4px; }}
+    .feature-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 40px; }}
+    .feature-card {{ background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; transition: transform 0.2s, border-color 0.2s; }}
+    .feature-card:hover {{ border-color: #58a6ff; transform: translateY(-2px); }}
+    .feature-card-title {{ color: #e6edf3; font-weight: 600; margin-bottom: 8px; }}
+    .feature-card-desc {{ color: #8b949e; font-size: 13px; line-height: 1.5; }}
+    div[data-testid="stExpander"] {{ background: #161b22; border: 1px solid #30363d; border-radius: 6px; }}
 </style>
 
 <div style="display:flex; align-items:center; justify-content:space-between; padding: 10px 0 20px; border-bottom: 1px solid #21262d; margin-bottom: 24px;">
