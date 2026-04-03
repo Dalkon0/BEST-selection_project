@@ -103,8 +103,16 @@ def build_3d_track_animation(gps_enu_df):
                     eye=dict(x=1.5, y=1.5, z=1.5)
                 )
             ),
-            updatemenus=[dict(type="buttons", buttons=[dict(label="Play Replay", method="animate", 
-                         args=[None, {"frame": {"duration": 40, "redraw": True}, "fromcurrent": True}])])],
+            updatemenus=[dict(
+                type="buttons",
+                bgcolor="green",
+                font=dict(color="white"),
+                buttons=[dict(
+                    label="▶ Play Replay",
+                    method="animate", 
+                    args=[None, {"frame": {"duration": 40, "redraw": True}, "fromcurrent": True}]
+                )]
+            )],
             margin=dict(l=5, r=5, b=5, t=40),
             height=700, title='Replay польоту'
         ),
