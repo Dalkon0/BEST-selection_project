@@ -2,7 +2,7 @@ import os
 import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from scraper.dataflash import parse_log, get_gps_dataframe, get_imu_dataframe, get_attitude_dataframe
+from scraper.dataflash import parse_log, get_gps_dataframe, get_imu_dataframe, get_attitude_dataframe, get_vibe_dataframe
 from analytics.metrics import compute_metrics
 from analytics.coords import gps_to_enu
 
@@ -38,12 +38,13 @@ else:
     print('\n── Метрики польоту ─────────────────────────────────────')
     imu_df = get_imu_dataframe(dataframes)
     att_df = get_attitude_dataframe(dataframes)
-    metrics = compute_metrics(gps_df, imu_df, att_df)
+    vibe_df = get_vibe_dataframe(dataframes)
+    metrics = compute_metrics(gps_df, imu_df, att_df, vibe_df)
 
     units = {
         'total_distance_m': 'м', 'max_horiz_speed_ms': 'м/с',
         'max_vert_speed_ms': 'м/с', 'max_acceleration': 'м/с²',
-        'max_alt_gain_m': 'м', 'total_duration_s': 'с',
+        'alt_gain_m': 'м', 'total_duration_s': 'с',
         'start_alt_m': 'м', 'max_alt_m': 'м', 'imu_max_vz_ms': 'м/с',
     }
     for key, val in metrics.items():

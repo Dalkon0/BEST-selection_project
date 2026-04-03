@@ -4,90 +4,82 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# WGS-84 ellipsoid constants
+_A  = 6378137.0          # semi-major axis, metres
+_E2 = 0.00669437999014   # eccentricity squared
+
+
 def wgs84_to_ecef(lat, lon, alt):
-    a, e2 = 6378137.0, 0.00669437999014
-    phi, lam = np.radians(lat), np.radians(lon)
-    N = a / np.sqrt(1 - e2 * np.sin(phi)**2)
-    return (N+alt)*np.cos(phi)*np.cos(lam), (N+alt)*np.cos(phi)*np.sin(lam), (N*(1-e2)+alt)*np.sin(phi)
+    """Convert WGS-84 geodetic coordinates to ECEF (Earth-Centred Earth-Fixed).
+
+    Parameters may be scalars or numpy arrays (degrees, degrees, metres).
+    Returns (X, Y, Z) in metres.
+    """
+    phi = np.radians(lat)
+    lam = np.radians(lon)
+    N = _A / np.sqrt(1 - _E2 * np.sin(phi) ** 2)
+    x = (N + alt) * np.cos(phi) * np.cos(lam)
+    y = (N + alt) * np.cos(phi) * np.sin(lam)
+    z = (N * (1 - _E2) + alt) * np.sin(phi)
+    return x, y, z
+
 
 def ecef_to_enu(x, y, z, lat0, lon0, alt0):
+    """Rotate ECEF coordinates to a local ENU frame centred at (lat0, lon0, alt0).
+
+    (x, y, z) may be arrays; reference point is scalar.
+    Returns (E, N, U) in metres.
+    """
     x0, y0, z0 = wgs84_to_ecef(lat0, lon0, alt0)
-    phi, lam = np.radians(lat0), np.radians(lon0)
-    dx, dy, dz = x-x0, y-y0, z-z0
-    t = -np.sin(lam)*dx + np.cos(lam)*dy
-    n = -np.sin(phi)*np.cos(lam)*dx - np.sin(phi)*np.sin(lam)*dy + np.cos(phi)*dz
-    u = np.cos(phi)*np.cos(lam)*dx + np.cos(phi)*np.sin(lam)*dy + np.sin(phi)*dz
-    return t, n, u
+    phi = np.radians(lat0)
+    lam = np.radians(lon0)
+    dx, dy, dz = x - x0, y - y0, z - z0
+    E = -np.sin(lam) * dx + np.cos(lam) * dy
+    N = -np.sin(phi) * np.cos(lam) * dx - np.sin(phi) * np.sin(lam) * dy + np.cos(phi) * dz
+    U =  np.cos(phi) * np.cos(lam) * dx + np.cos(phi) * np.sin(lam) * dy + np.sin(phi) * dz
+    return E, N, U
+
 
 def gps_to_enu(gps_df):
     """Convert GPS coordinates to local ENU (East-North-Up) system.
-    
+
     Args:
-        gps_df: DataFrame with Lat, Lng, Alt columns
-        
+        gps_df: DataFrame with Lat, Lng columns (and optionally Alt, TimeUS).
+
     Returns:
-        DataFrame with added E_m, N_m, U_m columns
-        
+        DataFrame with added E_m, N_m, U_m columns (metres from first valid point).
+
     Raises:
-        ValueError: If required columns are missing or data is invalid
+        ValueError: If required columns are missing or no valid coordinates found.
     """
     df = gps_df.copy()
-    
-    # Validate required columns
-    required_cols = ['Lat', 'Lng']
-    for col in required_cols:
+
+    for col in ('Lat', 'Lng'):
         if col not in df.columns:
             raise ValueError(f"Missing required column: {col}")
-    
-    # Handle empty dataframe
+
     if len(df) == 0:
         logger.warning("Empty GPS dataframe, returning as-is")
-        df['E_m'] = []
-        df['N_m'] = []
-        df['U_m'] = []
+        df['E_m'] = df['N_m'] = df['U_m'] = pd.Series(dtype=float)
         return df
-    
-    # Get origin point (first valid GPS coordinate)
-    valid_idx = df['Lat'].notna() & df['Lng'].notna()
-    if not valid_idx.any():
+
+    valid_mask = df['Lat'].notna() & df['Lng'].notna()
+    if not valid_mask.any():
         raise ValueError("No valid GPS coordinates found")
-    
-    first_valid = df[valid_idx].iloc[0]
-    lat0 = first_valid['Lat']
-    lon0 = first_valid['Lng']
-    alt0 = first_valid.get('Alt', 0) if 'Alt' in df.columns else 0
-    
-    # Vectorized conversion (much faster than apply)
-    lats = np.radians(df['Lat'].fillna(0).values)
-    lons = np.radians(df['Lng'].fillna(0).values)
-    alts = df['Alt'].fillna(0).values if 'Alt' in df.columns else np.zeros(len(df))
-    
-    lat0_r, lon0_r = np.radians(lat0), np.radians(lon0)
-    
-    # WGS-84 constants
-    a = 6378137.0  # Earth radius in meters
-    e2 = 0.00669437999014  # Eccentricity squared
-    
-    # Convert to ECEF
-    N = a / np.sqrt(1 - e2 * np.sin(lats)**2)
-    x = (N + alts) * np.cos(lats) * np.cos(lons)
-    y = (N + alts) * np.cos(lats) * np.sin(lons)
-    z = (N * (1 - e2) + alts) * np.sin(lats)
-    
-    # Origin ECEF coordinates
-    N0 = a / np.sqrt(1 - e2 * np.sin(lat0_r)**2)
-    x0 = (N0 + alt0) * np.cos(lat0_r) * np.cos(lon0_r)
-    y0 = (N0 + alt0) * np.cos(lat0_r) * np.sin(lon0_r)
-    z0 = (N0 * (1 - e2) + alt0) * np.sin(lat0_r)
-    
-    # Differences from origin
-    dx = x - x0
-    dy = y - y0
-    dz = z - z0
-    
-    # Rotate to ENU
-    df['E_m'] = -np.sin(lon0_r) * dx + np.cos(lon0_r) * dy
-    df['N_m'] = -np.sin(lat0_r) * np.cos(lon0_r) * dx - np.sin(lat0_r) * np.sin(lon0_r) * dy + np.cos(lat0_r) * dz
-    df['U_m'] = np.cos(lat0_r) * np.cos(lon0_r) * dx + np.cos(lat0_r) * np.sin(lon0_r) * dy + np.sin(lat0_r) * dz
-    
+
+    origin = df[valid_mask].iloc[0]
+    lat0 = float(origin['Lat'])
+    lon0 = float(origin['Lng'])
+    alt0 = float(origin['Alt']) if 'Alt' in df.columns and pd.notna(origin.get('Alt')) else 0.0
+
+    lats = df['Lat'].fillna(lat0).values.astype(float)
+    lons = df['Lng'].fillna(lon0).values.astype(float)
+    alts = df['Alt'].fillna(alt0).values.astype(float) if 'Alt' in df.columns else np.zeros(len(df))
+
+    x, y, z = wgs84_to_ecef(lats, lons, alts)
+    E, N, U = ecef_to_enu(x, y, z, lat0, lon0, alt0)
+
+    df['E_m'] = E
+    df['N_m'] = N
+    df['U_m'] = U
     return df
