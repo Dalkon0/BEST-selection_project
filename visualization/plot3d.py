@@ -80,7 +80,7 @@ def build_3d_track_animation(gps_enu_df):
         data=[
             go.Scatter3d(x=df['E_m'], y=df['N_m'], z=df['U_m'], mode='lines', line=dict(color='gray', width=2), name='Шлях'),
             go.Scatter3d(x=[df['E_m'].iloc[0]], y=[df['N_m'].iloc[0]], z=[df['U_m'].iloc[0]], 
-                        mode='markers', marker=dict(size=10, color='yellow', symbol='sphere'), name='БПЛА')
+                        mode='markers', marker=dict(size=10, color='yellow', symbol='circle'), name='БПЛА')
         ],
         layout=go.Layout(
             template='plotly_dark',
