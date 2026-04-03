@@ -66,9 +66,9 @@ def build_3d_track(gps_enu_df, color_by='speed', show_anomalies=True):
         title='3D-траєкторія БПЛА', 
         scene=dict(
             xaxis_title='E (m)', yaxis_title='N (m)', zaxis_title='U (m)', 
-            aspectmode='auto',
+            aspectmode='cube',
             camera=dict(
-                eye=dict(x=0.1, y=-2.5, z=0.1)
+                eye=dict(x=1.5, y=1.5, z=1.5)
             )
         ), 
         margin=dict(l=5, r=5, b=5, t=40), 
@@ -98,9 +98,9 @@ def build_3d_track_animation(gps_enu_df):
             template='plotly_dark',
             scene=dict(
                 xaxis_title='E (m)', yaxis_title='N (m)', zaxis_title='U (m)', 
-                aspectmode='auto',
+                aspectmode='cube',
                 camera=dict(
-                    eye=dict(x=0.1, y=-2.5, z=0.1)
+                    eye=dict(x=1.5, y=1.5, z=1.5)
                 )
             ),
             updatemenus=[dict(type="buttons", buttons=[dict(label="Play Replay", method="animate", 
@@ -133,9 +133,9 @@ def build_comparison_3d(enu_a, enu_b, name_a="Log A", name_b="Log B"):
         template='plotly_dark', title='Порівняння траєкторій',
         scene=dict(
             xaxis_title='E (m)', yaxis_title='N (m)', zaxis_title='U (m)', 
-            aspectmode='auto',
+            aspectmode='cube',
             camera=dict(
-                eye=dict(x=0.1, y=-2.5, z=0.1)
+                eye=dict(x=1.5, y=1.5, z=1.5)
             )
         ),
         margin=dict(l=5, r=5, b=5, t=40), height=700
