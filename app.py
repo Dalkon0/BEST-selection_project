@@ -1,8 +1,7 @@
 import streamlit as st
 import os
-import numpy as np
 from scraper.dataflash import parse_log, get_gps_dataframe, get_imu_dataframe, get_attitude_dataframe, get_vibe_dataframe, get_baro_dataframe, get_battery_dataframe, get_mode_dataframe
-from analytics.metrics import compute_metrics, compare_metrics
+from analytics.metrics import compute_metrics, compare_metrics, compute_sampling_rate, filter_gps
 from analytics.coords import gps_to_enu
 from visualization.plot3d import build_3d_track, build_3d_track_animation, build_comparison_3d, build_comparison_3d_animation, build_altitude_chart, build_speed_comparison_chart, build_attitude_tracking_chart, build_vibration_chart, build_baro_vs_gps_chart, build_battery_chart, build_cockpit
 from visualization.map_view import build_map, generate_kml
@@ -215,6 +214,7 @@ def load_log_data(file_bytes_or_path):
 def process_single_log(data):
     gps_df = get_gps_dataframe(data)
     if gps_df is None or len(gps_df) < 2: return None
+    gps_df = filter_gps(gps_df)
     imu_df, att_df, vibe_df, baro_df, bat_df, mode_df = get_imu_dataframe(data), get_attitude_dataframe(data), get_vibe_dataframe(data), get_baro_dataframe(data), get_battery_dataframe(data), get_mode_dataframe(data)
     metrics = compute_metrics(gps_df, imu_df, att_df, vibe_df)
     gps_enu = gps_to_enu(gps_df)
@@ -242,6 +242,14 @@ if main_files or demo_path:
     if len(logs_data) == 1:
         m, d0 = logs_data[0]['metrics'], logs_data[0]
         st.sidebar.success(f' {fnames[0]}')
+        gps_hz = compute_sampling_rate(d0['gps_df'])
+        imu_hz = compute_sampling_rate(d0['imu_df'])
+        st.sidebar.markdown(
+            f'<div style="font-size:11px;color:#8b949e;padding:4px 0 8px;">'
+            f'GPS: <b style="color:#c9d1d9">{gps_hz or "—"} Hz</b> &nbsp;·&nbsp; '
+            f'IMU: <b style="color:#c9d1d9">{imu_hz or "—"} Hz</b></div>',
+            unsafe_allow_html=True
+        )
         r, p, y = (float(d0['att_df']['Roll'].mean()), float(d0['att_df']['Pitch'].mean()), float(d0['att_df']['Yaw'].iloc[-1])) if d0['att_df'] is not None else (0,0,0)
         s = float(m.get('max_horiz_speed_ms') or 0)
         a = float(m.get('max_alt_m') or 0)
@@ -268,7 +276,8 @@ if main_files or demo_path:
     cur = 1
     with tabs[cur]:
         try: from streamlit_folium import st_folium
-        except: st_folium = None
+        except Exception:
+            st_folium = None
         if st_folium:
             map_obj = build_map(logs_data[0]['gps_df'], logs_data[1]['gps_df'] if compare_mode and len(logs_data) > 1 else None, fnames[0], fnames[1] if len(fnames) > 1 else '')
             st_folium(map_obj, use_container_width=True, height=560)
@@ -279,6 +288,8 @@ if main_files or demo_path:
         with c1:
             st.plotly_chart(build_baro_vs_gps_chart(d0['baro_df'], d0['gps_df']) or build_altitude_chart(d0['gps_df']), use_container_width=True)
             if d0['att_df'] is not None: st.plotly_chart(build_attitude_tracking_chart(d0['att_df']), use_container_width=True)
+            bat_fig = build_battery_chart(d0['bat_df'], d0['gps_df'])
+            if bat_fig is not None: st.plotly_chart(bat_fig, use_container_width=True)
         with c2:
             if d0['imu_df'] is not None: st.plotly_chart(build_speed_comparison_chart(d0['imu_df'], d0['att_df'], d0['gps_df']), use_container_width=True)
             if d0['vibe_df'] is not None: st.plotly_chart(build_vibration_chart(d0['vibe_df']), use_container_width=True)

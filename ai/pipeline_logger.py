@@ -77,7 +77,8 @@ def get_recent_logs(limit=10):
             client.close()
             for log in logs: log.pop("_id", None)
             return logs
-        except: return []
+        except Exception:
+            return []
     else:
         os.makedirs(_LOG_DIR, exist_ok=True)
         all_logs = []
@@ -88,4 +89,5 @@ def get_recent_logs(limit=10):
                     all_logs.extend(json.load(file))
                 if len(all_logs) >= limit: break
             return sorted(all_logs, key=lambda x: x["timestamp"], reverse=True)[:limit]
-        except: return []
+        except Exception:
+            return []

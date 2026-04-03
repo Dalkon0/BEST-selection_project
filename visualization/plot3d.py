@@ -194,7 +194,7 @@ def build_altitude_chart(gps_df):
     return fig
 
 def build_speed_comparison_chart(imu_df, att_df, gps_df):
-    if imu_df is None or att_df is None or 'VZ' not in gps_df.columns: return None
+    if imu_df is None or att_df is None or gps_df is None or 'VZ' not in gps_df.columns: return None
     from analytics.metrics import trapz_integrate, downsample_df
     merged = pd.merge_asof(imu_df[['TimeUS', 'AccX', 'AccY', 'AccZ']], att_df[['TimeUS', 'Roll', 'Pitch']], on='TimeUS')
     r, p = np.radians(merged['Roll'].values), np.radians(merged['Pitch'].values)

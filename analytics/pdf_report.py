@@ -23,14 +23,15 @@ class FlightReport(FPDF):
                     if os.path.exists(bold):
                         self.add_font("DejaVu", "B", bold)
                     break
-                except: continue
+                except Exception:
+                    continue
 
     def set_safe_font(self, style="", size=10):
         if self.unicode_font:
             # If we have DejaVu but didn't find the Bold file, fallback to regular
             try:
                 self.set_font("DejaVu", style, size)
-            except:
+            except Exception:
                 self.set_font("DejaVu", "", size)
         else:
             self.set_font("Arial", style, size)
@@ -122,7 +123,7 @@ def generate_pdf_report(filename, metrics, ai_report):
     
     try:
         pdf.multi_cell(0, 6, clean_report)
-    except:
+    except Exception:
         pdf.multi_cell(0, 6, transliterate(clean_report).encode('ascii', 'ignore').decode('ascii'))
     
     return bytes(pdf.output())
