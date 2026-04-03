@@ -66,13 +66,12 @@ def build_3d_track(gps_enu_df, color_by='speed', show_anomalies=True):
         title='3D-траєкторія БПЛА', 
         scene=dict(
             xaxis_title='E (m)', yaxis_title='N (m)', zaxis_title='U (m)', 
-            aspectmode='data',
+            aspectmode='scene',
             camera=dict(
-                eye=dict(x=0, y=0, z=2.5),
-                up=dict(x=0, y=1, z=0)
+                eye=dict(x=0.1, y=0.1, z=2.5)
             )
         ), 
-        margin=dict(l=10, r=10, b=10, t=50), 
+        margin=dict(l=5, r=5, b=5, t=40), 
         height=700,
         legend=dict(yanchor="top", y=0.95, xanchor="left", x=0.05)
     )
@@ -99,15 +98,14 @@ def build_3d_track_animation(gps_enu_df):
             template='plotly_dark',
             scene=dict(
                 xaxis_title='E (m)', yaxis_title='N (m)', zaxis_title='U (m)', 
-                aspectmode='data',
+                aspectmode='scene',
                 camera=dict(
-                    eye=dict(x=0, y=0, z=2.5),
-                    up=dict(x=0, y=1, z=0)
+                    eye=dict(x=0.1, y=0.1, z=2.5)
                 )
             ),
             updatemenus=[dict(type="buttons", buttons=[dict(label="Play Replay", method="animate", 
                          args=[None, {"frame": {"duration": 40, "redraw": True}, "fromcurrent": True}])])],
-            margin=dict(l=10, r=10, b=10, t=50),
+            margin=dict(l=5, r=5, b=5, t=40),
             height=700, title='Replay польоту'
         ),
         frames=[go.Frame(data=[
@@ -135,13 +133,12 @@ def build_comparison_3d(enu_a, enu_b, name_a="Log A", name_b="Log B"):
         template='plotly_dark', title='Порівняння траєкторій',
         scene=dict(
             xaxis_title='E (m)', yaxis_title='N (m)', zaxis_title='U (m)', 
-            aspectmode='data',
+            aspectmode='scene',
             camera=dict(
-                eye=dict(x=0, y=0, z=2.8),
-                up=dict(x=0, y=1, z=0)
+                eye=dict(x=0.1, y=0.1, z=2.5)
             )
         ),
-        margin=dict(l=10, r=10, b=10, t=50), height=700
+        margin=dict(l=5, r=5, b=5, t=40), height=700
     )
     return fig
 
