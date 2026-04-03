@@ -15,6 +15,8 @@ TRANSLATIONS = {
         "sidebar_color_time": "By Time",
         "sidebar_show_anomalies": "Show Anomalies",
         "sidebar_animate": "Animate Flight (Replay)",
+        "sidebar_compare_mode": "Compare Mode",
+        "sidebar_upload_multi": "Upload two .BIN files",
         "sidebar_ai_engine": "AI Engine",
         "sidebar_api_key_placeholder": "AIza...",
         "sidebar_api_key_help": "Free key: https://aistudio.google.com/app/apikey",
@@ -37,11 +39,17 @@ TRANSLATIONS = {
         "metric_vibration": "Max Vibration",
 
         "tab_3d": "3D Trajectory",
+        "tab_compare": "Compare",
         "tab_map": "Map",
         "tab_charts": "Charts",
         "tab_ai": "AI Analysis",
 
         "charts_raw_gps": "Raw GPS Data",
+        "compare_header": "Flight Comparison",
+        "compare_metric": "Metric",
+        "compare_log_a": "Log A",
+        "compare_log_b": "Log B",
+        "compare_delta": "Delta",
         "map_caption": "Leaflet · OpenStreetMap · no API key · speed colormap",
 
         "ai_subheader": "AI Flight Analysis",
@@ -100,6 +108,8 @@ TRANSLATIONS = {
         "sidebar_color_time": "За часом",
         "sidebar_show_anomalies": "Показувати аномалії",
         "sidebar_animate": "Анімація польоту (Replay)",
+        "sidebar_compare_mode": "Режим порівняння",
+        "sidebar_upload_multi": "Завантажте два .BIN файли",
         "sidebar_ai_engine": "AI модуль",
         "sidebar_api_key_placeholder": "AIza...",
         "sidebar_api_key_help": "Безкоштовний ключ: https://aistudio.google.com/app/apikey",
@@ -122,11 +132,17 @@ TRANSLATIONS = {
         "metric_vibration": "Макс. вібрація",
 
         "tab_3d": "3D-траєкторія",
+        "tab_compare": "Порівняння",
         "tab_map": "Карта",
         "tab_charts": "Графіки",
         "tab_ai": "AI-аналіз",
 
         "charts_raw_gps": "Сирі GPS-дані",
+        "compare_header": "Порівняння польотів",
+        "compare_metric": "Метрика",
+        "compare_log_a": "Лог А",
+        "compare_log_b": "Лог Б",
+        "compare_delta": "Різниця",
         "map_caption": "Leaflet · OpenStreetMap · без API ключа · колір за швидкістю",
 
         "ai_subheader": "AI-аналіз польоту",

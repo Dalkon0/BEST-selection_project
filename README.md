@@ -12,7 +12,9 @@ Web application for automated analysis of Ardupilot flight controller binary log
 ## Recent Updates
 
 - **Multi-Sensor Support:** Beyond the required GPS and IMU, the system automatically detects and visualizes **BARO** (barometric altitude vs GPS), **BAT/CURR** (battery voltage & current), **MODE** (flight mode timeline), **VIBE** (structural vibrations), **ATT** (roll tracking) — any sensor present in the log appears automatically.
-- **ZUPT (Zero Velocity Update):** IMU integration now uses a physically correct stationary detection — if 5 consecutive samples have `|acc| < 0.08 m/s²`, velocity resets to 0. Replaces the previous ad-hoc damping heuristic.
+- **Multi-Log Comparison (A/B Analysis):** Toggle "Compare Mode" to upload two `.BIN` files simultaneously. The system generates a side-by-side metric comparison table with delta (%) calculation and overlays both 3D trajectories for direct spatial comparison.
+- **ZUPT (Zero Velocity Update):** IMU integration now uses a physically correct stationary detection — if 5 consecutive samples have `|acc| < 0.08 m/s²`, velocity resets to 0. This prevents linear drift accumulation during hover or before takeoff.
+
 - **Peak-Preserving Downsampling:** `downsample_df` now guarantees that max/min values of Alt, Spd, VZ, AccZ are always included in the downsampled dataset — critical peaks are never lost during visualization.
 - **Tilt Compensation + Linear Detrend:** Full Body→Earth Frame rotation for IMU vertical speed, with endpoint-zeroing drift correction for visualization.
 - **KML Export:** One-click export to **Google Earth (.kml)** with 3D path extrusion.
@@ -254,6 +256,17 @@ This test parses `data/00000001.BIN`, checks ENU ranges, and prints all computed
 # UAV Telemetry Analyzer — Українська версія
 
 Веб-застосунок для автоматизованого аналізу бінарних лог-файлів польотного контролера Ardupilot (`.BIN`) з 3D-візуалізацією траєкторії, обчисленням метрик польоту та AI-діагностикою.
+
+---
+
+## Нещодавні оновлення
+
+- **Підтримка багатьох сенсорів:** Окрім обов'язкових GPS та IMU, система автоматично виявляє та візуалізує **BARO** (барометрична висота), **BAT/CURR** (напруга та струм), **MODE** (режими польоту), **VIBE** (вібрації), **ATT** (крен) — будь-який сенсор з логу відображається автоматично.
+- **Порівняння двох польотів (A/B аналіз):** Увімкніть "Режим порівняння", щоб завантажити два `.BIN` файли одночасно. Система створить таблицю порівняння метрик із розрахунком дельти (%) та накладе обидві 3D-траєкторії для візуального порівняння.
+- **ZUPT (Zero Velocity Update)** — коли `|acc| < 0.08 м/с²` для 5 послідовних семплів, апарат вважається нерухомим, і швидкість скидається до 0. Це запобігає накопиченню лінійного дрейфу під час зависання або перед зльотом.
+- **Анімація польоту (Replay):** Можливість відтворити політ у 3D з регулюванням швидкості.
+- **Авто-виявлення аномалій:** Візуальні маркери на 3D-траєкторії для небезпечних маневрів або вібрацій.
+- **PDF-звіти:** Генерація професійних технічних звітів з результатами AI-аналізу.
 
 ---
 

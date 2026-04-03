@@ -93,6 +93,27 @@ def build_3d_track_animation(gps_enu_df):
     )
     return fig
 
+def build_comparison_3d(enu_a, enu_b, name_a="Log A", name_b="Log B"):
+    from analytics.metrics import downsample_df
+    df_a = downsample_df(enu_a, 2000)
+    df_b = downsample_df(enu_b, 2000)
+    
+    fig = go.Figure()
+    # Track A
+    fig.add_trace(go.Scatter3d(x=df_a['E_m'], y=df_a['N_m'], z=df_a['U_m'], mode='lines', line=dict(color='#58a6ff', width=4), name=name_a))
+    fig.add_trace(go.Scatter3d(x=df_a['E_m'], y=df_a['N_m'], z=np.zeros(len(df_a)), mode='lines', line=dict(color='#58a6ff', width=1), opacity=0.2, showlegend=False))
+    
+    # Track B
+    fig.add_trace(go.Scatter3d(x=df_b['E_m'], y=df_b['N_m'], z=df_b['U_m'], mode='lines', line=dict(color='#ff7b72', width=4), name=name_b))
+    fig.add_trace(go.Scatter3d(x=df_b['E_m'], y=df_b['N_m'], z=np.zeros(len(df_b)), mode='lines', line=dict(color='#ff7b72', width=1), opacity=0.2, showlegend=False))
+    
+    fig.update_layout(
+        template='plotly_dark', title='Порівняння траєкторій',
+        scene=dict(xaxis_title='E (m)', yaxis_title='N (m)', zaxis_title='U (m)', aspectmode='data'),
+        margin=dict(l=0, r=0, b=0, t=40), height=700
+    )
+    return fig
+
 def build_altitude_chart(gps_df):
     from analytics.metrics import downsample_df
     df = downsample_df(gps_df, 1000)

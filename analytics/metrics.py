@@ -234,3 +234,25 @@ def compute_metrics(gps_df, imu_df=None, att_df=None, vibe_df=None):
             metrics['max_vibration'] = None
     
     return metrics
+
+def compare_metrics(metrics_a, metrics_b):
+    """Compare two sets of metrics and return a combined dictionary with deltas."""
+    comparison = {}
+    keys = [
+        'total_distance_m', 'total_duration_s', 'max_horiz_speed_ms', 
+        'max_vert_speed_ms', 'max_alt_m', 'max_acceleration', 
+        'imu_max_vz_ms', 'max_vibration'
+    ]
+    
+    for k in keys:
+        val_a = metrics_a.get(k, 0) or 0
+        val_b = metrics_b.get(k, 0) or 0
+        diff = val_b - val_a
+        pct = (diff / val_a * 100) if val_a != 0 else 0
+        comparison[k] = {
+            'a': val_a,
+            'b': val_b,
+            'diff': diff,
+            'pct': pct
+        }
+    return comparison
