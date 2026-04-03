@@ -125,4 +125,4 @@ def generate_pdf_report(filename, metrics, ai_report):
     except:
         pdf.multi_cell(0, 6, transliterate(clean_report).encode('ascii', 'ignore').decode('ascii'))
     
-    return pdf.output()
+    return bytes(pdf.output())
