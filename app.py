@@ -15,7 +15,8 @@ from i18n import t
 
 st.set_page_config(page_title='UAV Telemetry Analyzer', page_icon='🛸', layout='wide')
 
-lang = st.sidebar.selectbox('Language / Мова', ['en', 'uk'], index=1, label_visibility='collapsed')
+st.sidebar.markdown(f'<div class="section-label" style="margin-top:0">Language / Мова</div>', unsafe_allow_html=True)
+lang = st.sidebar.selectbox('Language Selector', ['en', 'uk'], index=1, label_visibility='collapsed')
 
 st.markdown(f"""
 <style>
