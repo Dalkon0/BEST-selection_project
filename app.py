@@ -123,7 +123,8 @@ show_anoms = st.sidebar.toggle(t('sidebar_show_anomalies', lang), value=True)
 animate_mode = st.sidebar.toggle(t('sidebar_animate', lang), value=False)
 
 st.sidebar.markdown(f'<div class="section-label" style="margin-top:16px">{t("sidebar_ai_engine", lang)}</div>', unsafe_allow_html=True)
-gemini_key = st.sidebar.text_input('Gemini API Key', type='password', placeholder=t('sidebar_api_key_placeholder', lang), help=t('sidebar_api_key_help', lang))
+default_key = st.secrets.get("GEMINI_API_KEY", os.getenv("GEMINI_API_KEY", ""))
+gemini_key = st.sidebar.text_input('Gemini API Key', value=default_key, type='password', placeholder=t('sidebar_api_key_placeholder', lang), help=t('sidebar_api_key_help', lang))
 ai_mode = st.sidebar.radio('Mode', ['single', 'ab'], format_func=lambda x: t('sidebar_mode_single', lang) if x == 'single' else t('sidebar_mode_ab', lang), label_visibility='collapsed')
 
 if ai_mode == 'single':
