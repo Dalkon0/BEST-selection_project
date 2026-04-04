@@ -2,7 +2,7 @@ from fpdf import FPDF
 from fpdf.enums import XPos, YPos
 import os
 
-OUTPUT = os.path.join(os.path.dirname(__file__), "UAV_Telemetry_Analyzer_Presentation.pdf")
+OUTPUT = os.path.join(os.path.dirname(__file__), "..", "UAV_Telemetry_Analyzer_Presentation.pdf")
 
 BG       = (15, 17, 23)
 BG2      = (22, 27, 34)
@@ -337,7 +337,7 @@ boxes = [
         "v[i] = v[i-1] + (a[i-1]+a[i])/2 · Δt",
         "Точність O(dt²) vs O(dt) прямокутний",
         "Гравітація: +9.80665 м/с² (точне)",
-        "ZUPT: |acc|<0.08 x5 семплів → v=0",
+        "ZUPT: |acc|<0.15 x5 семплів → v=0",
         "Лінійне детрендування (endpoint zeroing)",
     ]),
     (RED, "Tilt Compensation", [
@@ -399,7 +399,7 @@ pdf.set_xy(10, 62)
 for label, val, color in [
     ("MVP", "100%", GREEN),
     ("Nice-to-have", "100%", BLUE),
-    ("Тести", "29/29", ORANGE),
+    ("Тести", "30/30", ORANGE),
 ]:
     pdf.set_font("Arial", "B", 18)
     pdf.set_text_color(*color)
@@ -657,7 +657,7 @@ stack = [
     (ORANGE, "Gemini 2.5",   "AI analysis API"),
     (GRAY,   "MongoDB",      "Pipeline log storage"),
     (RED,    "Docker",       "Containerization"),
-    (BLUE,   "pytest",       "29 unit tests"),
+    (BLUE,   "pytest",       "30 unit tests"),
 ]
 
 for i, (color, name, desc) in enumerate(stack):
@@ -681,7 +681,7 @@ for i, (color, name, desc) in enumerate(stack):
 
 pdf.code_block([
     "# 1. Clone",
-    "git clone https://github.com/Illia915/BEST-selection_project.git",
+    "git clone https://github.com/Dalkon0/BEST-selection_project.git",
     "cd BEST-selection_project",
     "",
     "# 2. Install",
@@ -702,7 +702,7 @@ pdf.code_block([
     "pytest tests/test_units.py",
     "      tests/test_math.py -v",
     "",
-    "# 29 passed in 0.59s",
+    "# 30 passed in 0.35s",
 ], 185, 128, 103)
 
 
